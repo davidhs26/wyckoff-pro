@@ -1,0 +1,80 @@
+# Wyckoff Pro - Advanced Volume Spread Analysis Indicator
+
+> The most advanced Wyckoff Method indicator for TradingView. Professional-grade tools to detect institutional accumulation and distribution phases.
+
+## About Wyckoff Pro
+
+Wyckoff Pro is a professional trading indicator built on the principles of Richard D. Wyckoff, a legendary Wall Street trader and technical analyst from the early 20th century. Our indicator helps traders identify:
+
+- **Accumulation Phases**: Periods where institutional investors are quietly buying assets before a markup phase
+- **Distribution Phases**: Periods where institutions are selling their positions before a markdown
+- **Volume Spread Analysis (VSA)**: Advanced analysis of the relationship between price spread and volume
+- **Smart Money Footprints**: Identifying when large players are entering or exiting positions
+
+## The Wyckoff Method
+
+Richard Wyckoff developed his trading methodology in the 1930s, focusing on:
+
+1. **The Law of Supply and Demand**: Price movements are driven by the imbalance between buying and selling pressure
+2. **The Law of Cause and Effect**: Accumulation and distribution create the "cause" for subsequent price movements
+3. **The Law of Effort vs Result**: Volume (effort) should confirm price movement (result)
+
+## Key Features
+
+### Trading Range Detection
+- Automatic identification of accumulation and distribution trading ranges
+- Phase A through E detection with visual markers
+- Spring and Upthrust (UTAD) confirmation signals
+
+### Volume Spread Analysis
+- Real-time VSA signal detection
+- Stopping Volume identification
+- No Demand / No Supply signals
+- Effort vs Result analysis
+
+### Institutional Activity
+- Smart money accumulation detection
+- Distribution warning signals
+- Volume anomaly alerts
+
+## Technical Concepts
+
+### Accumulation Schematics
+- Phase A: Stopping the previous downtrend
+- Phase B: Building the cause for markup
+- Phase C: Testing supply with Spring
+- Phase D: Markup begins with SOS (Sign of Strength)
+- Phase E: Mark up phase with pullbacks
+
+### Distribution Schematics
+- Phase A: Stopping the previous uptrend
+- Phase B: Building the cause for markdown
+- Phase C: Testing demand with UTAD (Upthrust After Distribution)
+- Phase D: Markdown begins with SOW (Sign of Weakness)
+- Phase E: Mark down phase with rallies
+
+## Platform
+
+Wyckoff Pro is available exclusively on TradingView, the world's most popular charting platform. Our indicator integrates seamlessly with TradingView's ecosystem.
+
+## Pricing
+
+- Monthly subscription: $29.99/month
+- Access to full indicator suite
+- Regular updates and improvements
+- Customer support included
+
+## Contact
+
+- Website: https://tradewyckoff.com
+- Twitter/X: @TradingRWyckoff
+- Support: Available through dashboard ticket system
+
+## Company
+
+TradeWyckoff is dedicated to providing professional-grade trading tools based on time-tested methodologies. We believe that understanding institutional behavior is key to successful trading.
+
+---
+
+For more information about the Wyckoff Method and Volume Spread Analysis, visit our tutorials section at https://tradewyckoff.com/tutorials
+

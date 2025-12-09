@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TradingView-style scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b2b5be;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #787b86;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Base styles */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animation delays */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+/* Chart grid pattern */
+.chart-grid {
+  background-image: linear-gradient(to right, #f0f3fa 1px, transparent 1px),
+    linear-gradient(to bottom, #f0f3fa 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Subtle background grid for Hero */
+.bg-grid-subtle {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, rgba(240, 243, 250, 0.8) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(240, 243, 250, 0.8) 1px, transparent 1px);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+
+/* Candle styles */
+.candle {
+  width: 8px;
+  position: absolute;
+}
+.candle.green {
+  background-color: #089981;
+}
+.candle.red {
+  background-color: #f23645;
+}
+
+.wick {
+  width: 1px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.wick.green {
+  background-color: #089981;
+}
+.wick.red {
+  background-color: #f23645;
+}
+
+/* Wyckoff labels */
+.wyckoff-label {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 4px;
+  border-radius: 4px;
+  position: absolute;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.label-green {
+  background-color: #e8f5e9;
+  color: #089981;
+  border: 1px solid #089981;
+}
+.label-red {
+  background-color: #ffebee;
+  color: #f23645;
+  border: 1px solid #f23645;
+  cursor: none !important; /* Ensure labels don't show cursor if they had it */
+}
+.label-blue {
+  background-color: #e3f2fd;
+  color: #2962ff;
+  border: 1px solid #2962ff;
+}
+
+/* Phase boxes */
+.phase-box {
+  position: absolute;
+  bottom: 0;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: bold;
+  color: white;
+  opacity: 0.8;
+}
+
+/* Clerk component customization */
+.cl-rootBox {
+  font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu,
+    sans-serif !important;
+}
+
+.cl-card {
+  border-radius: 16px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.cl-formButtonPrimary {
+  background-color: #2962ff !important;
+  border-radius: 9999px !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background-color: #1e53e5 !important;
+}
+
+/* Stripe Embedded Checkout Customization */
+.stripe-checkout-container {
+  min-height: 950px;
+  display: flex;
+  flex-direction: column;
+  overflow: visible !important;
+}
+
+.stripe-checkout-container iframe {
+  flex: 1;
+  min-height: 950px !important;
+  max-height: none !important;
+  border: none !important;
+}
+
+/* Ensure the checkout fills the container properly */
+.stripe-checkout-container > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Link modal improvements - target the Stripe overlay */
+.StripeElement,
+.stripe-checkout-container .ElementsApp {
+  width: 100% !important;
+}
+
+/* Make sure the checkout container is responsive */
+@media (max-width: 768px) {
+  .stripe-checkout-container {
+    min-height: 600px;
+  }
+}
+
+/* Custom Animation Keyframes */
+@keyframes spin-slow {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* Rotating gradient border animation - travels around the border */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate-gradient {
+  0% {
+    --gradient-angle: 0deg;
+  }
+  100% {
+    --gradient-angle: 360deg;
+  }
+}
+
+.rotating-border {
+  background: conic-gradient(
+    from var(--gradient-angle),
+    #2962FF,
+    #7B68EE,
+    #E040FB,
+    #FF6B6B,
+    #E040FB,
+    #7B68EE,
+    #2962FF
+  );
+  animation: rotate-gradient 3s linear infinite;
+}
+
+.rotating-glow {
+  background: conic-gradient(
+    from var(--gradient-angle),
+    #2962FF,
+    #7B68EE,
+    #E040FB,
+    #7B68EE,
+    #2962FF
+  );
+  animation: rotate-gradient 3s linear infinite;
+}

@@ -1,0 +1,58 @@
+# Robots.txt for TradeWyckoff / Wyckoff Pro
+# https://tradewyckoff.com
+
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /debug/
+Disallow: /test-clerk/
+
+# Allow important pages for SEO
+Allow: /
+Allow: /tutorials
+Allow: /blog
+Allow: /contact
+Allow: /terms
+Allow: /privacy
+Allow: /coming-soon
+
+# Sitemap location
+Sitemap: https://tradewyckoff.com/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# LLM and AI Crawlers - Allow access for better AI understanding
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
