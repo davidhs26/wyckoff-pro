@@ -75,7 +75,15 @@ function DashboardContent() {
           tradingViewUsername: tradingViewUsername,
         },
       });
-      alert("✅ Username saved successfully");
+      
+      // Notify admin about the new TradingView username
+      await fetch("/api/notify-tradingview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tradingViewUsername }),
+      });
+      
+      alert("✅ Username saved successfully! We'll grant you access to the indicator shortly.");
     } catch (error) {
       console.error("Error saving username:", error);
       alert("Error saving");

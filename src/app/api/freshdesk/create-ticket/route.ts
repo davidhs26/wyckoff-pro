@@ -40,17 +40,12 @@ export async function POST(request: NextRequest) {
     // Create ticket in Freshdesk
     const ticketData = {
       subject,
-      description,
+      description: `${description}\n\n---\nUser ID: ${userId}\nTradingView: ${user.unsafeMetadata?.tradingViewUsername || "Not set"}`,
       email: userEmail,
       name: userName,
       priority: priority || 1, // 1=Low, 2=Medium, 3=High, 4=Urgent
       status: 2, // 2=Open
-      type: type || "Question",
       source: 2, // 2=Portal
-      custom_fields: {
-        cf_clerk_user_id: userId,
-        cf_tradingview_username: user.unsafeMetadata?.tradingViewUsername || "",
-      },
       tags: ["wyckoff-pro", "dashboard"],
     };
 
