@@ -10,7 +10,7 @@ const testimonials = [
       '"I used to see charts and see chaos. Now with the Wyckoff indicator I see clear structures. The automatic Phase C labeling is simply magic."',
     name: "Carlos M.",
     role: "Futures Trader",
-    gradient: "from-blue-400 to-blue-600",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
     stars: 5,
@@ -18,7 +18,7 @@ const testimonials = [
       '"The VSA alerts have saved me from countless losing trades. Detecting lack of demand at highs is brutally effective."',
     name: "Ana P.",
     role: "Crypto Analyst",
-    gradient: "from-green-400 to-green-600",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
     stars: 5,
@@ -26,7 +26,7 @@ const testimonials = [
       '"I\'ve been doing this for 5 years and this script is the only thing I keep clean on my chart. Accumulation structures are visible from miles away."',
     name: "David R.",
     role: "Stock Trader",
-    gradient: "from-purple-400 to-purple-600",
+    image: "https://randomuser.me/api/portraits/men/86.jpg",
   },
 ];
 
@@ -73,9 +73,11 @@ export function TestimonialsSection() {
 
               {/* Author */}
               <div className="flex items-center gap-3">
-                <div
-                  className={`w-10 h-10 rounded-full bg-gradient-to-r ${testimonial.gradient}`}
-                ></div>
+                <img
+                  src={testimonial.image}
+                  alt={testimonial.name}
+                  className="w-10 h-10 rounded-full object-cover border-2 border-white/10"
+                />
                 <div>
                   <div className="font-bold text-white">{testimonial.name}</div>
                   <div className="text-xs text-[#B2B5BE]">{testimonial.role}</div>
