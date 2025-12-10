@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SupportTickets } from "@/components";
@@ -14,7 +14,7 @@ interface Subscription {
   trialEnd: string | null;
 }
 
-export default function DashboardPage() {
+function DashboardContent() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
@@ -293,5 +293,24 @@ export default function DashboardPage() {
         <SupportTickets />
       </div>
     </div>
+  );
+}
+
+function DashboardLoading() {
+  return (
+    <div className="min-h-screen bg-[#F8F9FD] flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2962FF] mx-auto mb-4"></div>
+        <p className="text-[#5D6069]">Loading dashboard...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<DashboardLoading />}>
+      <DashboardContent />
+    </Suspense>
   );
 }
