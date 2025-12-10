@@ -310,8 +310,8 @@ function CheckoutContent() {
           </div>
 
           {/* Right Side - Checkout Form */}
-          <div className="lg:col-span-4">
-            <div className="bg-white rounded-2xl border border-[#E0E3EB] overflow-visible shadow-lg shadow-black/5 min-h-[700px]">
+          <div className="lg:col-span-4 pb-8">
+            <div className="bg-white rounded-2xl border border-[#E0E3EB] overflow-visible shadow-lg shadow-black/5 min-h-[700px] pb-6">
               <EmbeddedCheckoutProvider
                 stripe={stripePromise}
                 options={{ 
