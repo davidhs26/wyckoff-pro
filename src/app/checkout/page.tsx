@@ -24,6 +24,7 @@ const PLANS = {
     period: "3 months",
     includesVSA: false,
     hasTrial: true,
+    isLifetime: false,
   },
   "6-months": {
     name: "6 Months",
@@ -34,6 +35,7 @@ const PLANS = {
     savings: 18,
     includesVSA: true,
     hasTrial: true,
+    isLifetime: false,
   },
   "12-months": {
     name: "12 Months",
@@ -44,10 +46,12 @@ const PLANS = {
     savings: 38,
     includesVSA: true,
     hasTrial: true,
+    isLifetime: false,
   },
   "lifetime": {
     name: "Lifetime",
     description: "Permanent access with no recurring payments",
+    monthlyPrice: 0,
     totalPrice: 997,
     period: "one-time",
     includesVSA: true,
