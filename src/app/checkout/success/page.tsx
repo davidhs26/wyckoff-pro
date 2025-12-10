@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
-export default function CheckoutSuccessPage() {
+function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { isLoaded, isSignedIn } = useUser();
@@ -24,7 +24,7 @@ export default function CheckoutSuccessPage() {
     } else {
       setStatus("error");
     }
-  }, [sessionId, isLoaded, isSignedIn]);
+  }, [sessionId, isLoaded, isSignedIn, router]);
 
   const verifySession = async () => {
     try {
@@ -120,3 +120,21 @@ export default function CheckoutSuccessPage() {
   );
 }
 
+function CheckoutSuccessLoading() {
+  return (
+    <div className="min-h-screen bg-[#F8F9FD] flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2962FF] mx-auto mb-4"></div>
+        <p className="text-[#5D6069]">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense fallback={<CheckoutSuccessLoading />}>
+      <CheckoutSuccessContent />
+    </Suspense>
+  );
+}
