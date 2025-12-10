@@ -146,36 +146,29 @@ body {
   background-color: #1e53e5 !important;
 }
 
-/* Stripe Embedded Checkout Customization - Dark Theme */
-.stripe-checkout-wrapper {
-  background: transparent;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.stripe-checkout-wrapper iframe {
+/* Stripe Embedded Checkout Customization */
+.StripeCheckout,
+.EmbeddedCheckout {
   min-height: 700px !important;
+}
+
+/* Ensure Stripe iframe doesn't get cut off */
+[data-stripe-checkout] iframe,
+.EmbeddedCheckout iframe {
+  min-height: 700px !important;
+  height: auto !important;
   border: none !important;
-  background: transparent !important;
 }
 
-/* Target Stripe's embedded checkout */
-.stripe-embedded-checkout {
-  width: 100%;
-}
-
-.stripe-embedded-checkout > div {
+/* Allow Stripe modals to overflow */
+.EmbeddedCheckout > div {
   min-height: 700px;
+  overflow: visible !important;
 }
 
 /* Ensure proper scrolling on mobile */
 @media (max-width: 1024px) {
-  .stripe-checkout-wrapper {
-    margin: 0 -1rem;
-    border-radius: 0;
-  }
-  
-  .stripe-checkout-wrapper iframe {
+  .EmbeddedCheckout iframe {
     min-height: 600px !important;
   }
 }

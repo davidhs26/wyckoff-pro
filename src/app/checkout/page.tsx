@@ -159,98 +159,87 @@ function CheckoutContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F8F9FD] via-white to-[#E8EFFD]">
-      {/* Fixed Header with Trust Badges */}
-      <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#E0E3EB]">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <svg width="28" height="28" viewBox="0 0 32 32" className="text-[#2962FF]">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#2962FF]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#089981]/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
+      </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-12">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
+            <svg width="32" height="32" viewBox="0 0 32 32" className="text-[#2962FF]">
               <rect x="4" y="16" width="4" height="12" rx="2" fill="currentColor" opacity="0.5"/>
               <rect x="10" y="12" width="4" height="16" rx="2" fill="currentColor" opacity="0.7"/>
               <rect x="16" y="8" width="4" height="20" rx="2" fill="currentColor" opacity="0.85"/>
               <rect x="22" y="4" width="4" height="24" rx="2" fill="currentColor"/>
             </svg>
-            <span className="text-[#131722] font-bold text-lg group-hover:text-[#2962FF] transition-colors">Wyckoff Pro</span>
+            <span className="text-[#131722] font-bold text-xl group-hover:text-[#2962FF] transition-colors">Wyckoff Pro</span>
           </Link>
-          
-          {/* Trust badges in header - always visible */}
-          <div className="flex items-center gap-3 text-xs text-[#5D6069]">
-            <div className="hidden sm:flex items-center gap-1.5 bg-[#F8F9FD] px-3 py-1.5 rounded-full">
-              <svg className="w-3.5 h-3.5 text-[#089981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              Secure Payment
-            </div>
-            <div className="hidden sm:flex items-center gap-1.5 bg-[#F8F9FD] px-3 py-1.5 rounded-full">
-              <svg className="w-3.5 h-3.5 text-[#089981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              SSL Encrypted
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Page Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#131722] mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#131722] mb-3">
             Complete Your Subscription
           </h1>
-          <p className="text-[#5D6069] text-sm">Secure payment powered by Stripe</p>
+          <p className="text-[#5D6069]">Secure payment powered by Stripe</p>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-6">
+        <div className="grid lg:grid-cols-7 gap-8">
           {/* Left Side - Plan Details */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl border border-[#E0E3EB] p-6 shadow-sm">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#2962FF] to-[#1E53E5] rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="lg:col-span-3 space-y-6">
+            {/* Plan Card */}
+            <div className="bg-white rounded-2xl border border-[#E0E3EB] p-6 shadow-lg shadow-black/5">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 bg-gradient-to-br from-[#2962FF] to-[#1E53E5] rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#131722]">Wyckoff Pro - {plan.name}</h3>
+                  <h3 className="font-bold text-[#131722] text-lg">Wyckoff Pro - {plan.name}</h3>
                   <p className="text-[#5D6069] text-sm">{plan.description}</p>
                 </div>
               </div>
 
               {/* Price */}
-              <div className="mb-4">
+              <div className="flex items-baseline gap-1 mb-6">
                 {plan.isLifetime ? (
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-[#131722]">${plan.totalPrice}</span>
-                    <span className="text-[#5D6069] text-sm">one-time</span>
-                  </div>
+                  <>
+                    <span className="text-4xl font-bold text-[#131722]">${plan.totalPrice}</span>
+                    <span className="text-[#5D6069]">one-time</span>
+                  </>
                 ) : (
                   <>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-bold text-[#131722]">${plan.monthlyPrice}</span>
-                      <span className="text-[#5D6069] text-sm">/month</span>
-                    </div>
-                    <p className="text-xs text-[#787B86] mt-1">
-                      ${plan.totalPrice} billed every {plan.period}
-                    </p>
+                    <span className="text-4xl font-bold text-[#131722]">${plan.monthlyPrice}</span>
+                    <span className="text-[#5D6069]">/month</span>
                   </>
-                )}
-                {plan.savings > 0 && (
-                  <span className="inline-block mt-2 bg-[#089981]/10 text-[#089981] text-xs font-semibold px-2 py-1 rounded">
-                    Save {plan.savings}%
-                  </span>
                 )}
               </div>
 
+              {!plan.isLifetime && (
+                <p className="text-sm text-[#787B86] mb-2">
+                  ${plan.totalPrice} billed every {plan.period}
+                </p>
+              )}
+
+              {plan.savings > 0 && (
+                <span className="inline-block mb-4 bg-[#089981]/10 text-[#089981] text-xs font-semibold px-2 py-1 rounded">
+                  Save {plan.savings}%
+                </span>
+              )}
+
               {/* Trial info */}
               {hasTrial && !plan.isLifetime && (
-                <div className="bg-[#2962FF]/5 border border-[#2962FF]/20 rounded-xl p-3 mb-4">
-                  <div className="flex items-start gap-2">
-                    <svg className="w-5 h-5 text-[#2962FF] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                <div className="bg-[#2962FF]/5 border border-[#2962FF]/20 rounded-xl p-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-[#2962FF] rounded-full flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
                     <div>
-                      <p className="font-semibold text-[#131722] text-sm">7-Day Free Trial</p>
-                      <p className="text-[#5D6069] text-xs">
-                        You won&apos;t be charged today. Cancel anytime.
+                      <h4 className="font-bold text-[#131722] text-sm">7-Day Free Trial</h4>
+                      <p className="text-[#5D6069] text-xs mt-1">
+                        You won&apos;t be charged today. Your card will only be charged after the 7-day trial ends.
                       </p>
                     </div>
                   </div>
@@ -258,40 +247,71 @@ function CheckoutContent() {
               )}
 
               {/* Features */}
-              <div className="space-y-2 mb-4">
+              <div className="space-y-3 mb-6">
                 {[
                   "Wyckoff Structure Indicator",
                   plan.includesVSA && "VSA Tom Williams Indicator",
                   "Spring & UTAD Detection",
+                  "A-E Phases Visualization",
+                  "Contextual Tooltips",
                   "TradingView Alerts",
+                  "Automatic Updates",
                   "Discord Support",
                 ].filter(Boolean).map((feature, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-[#089981] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-[#089981]/10 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-[#089981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
                     <span className="text-[#5D6069] text-sm">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="pt-3 border-t border-[#E0E3EB] flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-[#5D6069] text-xs">
+              <div className="pt-4 border-t border-[#E0E3EB]">
+                <div className="flex items-center gap-2 text-[#5D6069] text-sm">
                   <svg className="w-4 h-4 text-[#089981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
-                  Cancel anytime
+                  <span>Cancel anytime, no questions asked</span>
                 </div>
-                <Link href="/#pricing" className="text-[#2962FF] hover:underline text-xs">
-                  Change plan
+              </div>
+
+              {/* Change plan */}
+              <div className="mt-4 text-center">
+                <Link href="/#pricing" className="text-[#2962FF] hover:underline text-sm">
+                  ← Change plan
                 </Link>
+              </div>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-[#787B86]">
+              <div className="flex items-center gap-1.5 bg-white px-3 py-2 rounded-lg border border-[#E0E3EB]">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Secure Payment
+              </div>
+              <div className="flex items-center gap-1.5 bg-white px-3 py-2 rounded-lg border border-[#E0E3EB]">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                SSL Encrypted
+              </div>
+              <div className="flex items-center gap-1.5 bg-white px-3 py-2 rounded-lg border border-[#E0E3EB]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z"/>
+                </svg>
+                Powered by Stripe
               </div>
             </div>
           </div>
 
           {/* Right Side - Checkout Form */}
-          <div className="lg:col-span-3">
-            <div className="bg-white rounded-2xl border border-[#E0E3EB] shadow-sm overflow-hidden">
+          <div className="lg:col-span-4">
+            <div className="bg-white rounded-2xl border border-[#E0E3EB] overflow-visible shadow-lg shadow-black/5 min-h-[700px]">
               <EmbeddedCheckoutProvider
                 stripe={stripePromise}
                 options={{ 
@@ -301,14 +321,14 @@ function CheckoutContent() {
                   },
                 }}
               >
-                <EmbeddedCheckout />
+                <EmbeddedCheckout className="min-h-[700px]" />
               </EmbeddedCheckoutProvider>
             </div>
           </div>
         </div>
 
         {/* Back Link */}
-        <div className="text-center mt-6">
+        <div className="text-center mt-8">
           <Link href="/" className="text-[#5D6069] hover:text-[#2962FF] text-sm transition-colors inline-flex items-center gap-1">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
