@@ -3,14 +3,25 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-02-24.acacia",
-});
+// Lazy initialization to avoid build-time errors
+let stripe: Stripe | null = null;
+let resend: Resend | null = null;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
-const fromEmail = process.env.FROM_EMAIL || "Wyckoff Pro <onboarding@resend.dev>";
+function getStripe() {
+  if (!stripe) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: "2025-02-24.acacia",
+    });
+  }
+  return stripe;
+}
+
+function getResend() {
+  if (!resend && process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 async function sendEmail({
   to,
@@ -22,8 +33,11 @@ async function sendEmail({
   html: string;
 }) {
   try {
-    if (process.env.RESEND_API_KEY) {
-      await resend.emails.send({
+    const resendClient = getResend();
+    const fromEmail = process.env.FROM_EMAIL || "Wyckoff Pro <onboarding@resend.dev>";
+    
+    if (resendClient) {
+      await resendClient.emails.send({
         from: fromEmail,
         to,
         subject,
@@ -39,7 +53,7 @@ async function sendEmail({
 }
 
 async function getCustomerEmail(customerId: string): Promise<string> {
-  const customer = await stripe.customers.retrieve(customerId);
+  const customer = await getStripe().customers.retrieve(customerId);
   if (customer.deleted) return "deleted@customer.com";
   return (customer as Stripe.Customer).email || "unknown@email.com";
 }
@@ -48,6 +62,8 @@ export async function POST(req: Request) {
   const body = await req.text();
   const headersList = await headers();
   const signature = headersList.get("stripe-signature");
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
 
   if (!signature) {
     return NextResponse.json({ error: "No signature" }, { status: 400 });
@@ -56,7 +72,7 @@ export async function POST(req: Request) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    event = getStripe().webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error("Webhook signature verification failed:", err);
     return NextResponse.json(
