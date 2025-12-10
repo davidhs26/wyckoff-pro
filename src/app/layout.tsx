@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     siteName: "Wyckoff Pro",
     images: [
       {
-        url: "https://i.ibb.co/jvrWFmKN/Trade-Wyckoff-1.png",
+        url: "https://i.ibb.co/HZQ4rPn/Trade-Wyckoff-2.png",
         width: 1200,
         height: 630,
         alt: "Wyckoff Pro - Advanced VSA Trading Indicator",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     title: "Wyckoff Pro - Advanced Volume Spread Analysis Indicator",
     description:
       "Detect accumulation & distribution phases. Identify institutional trading patterns with our professional TradingView indicator.",
-    images: ["https://i.ibb.co/jvrWFmKN/Trade-Wyckoff-1.png"],
+    images: ["https://i.ibb.co/HZQ4rPn/Trade-Wyckoff-2.png"],
     creator: "@TradingRWyckoff",
   },
   icons: {
@@ -145,7 +145,7 @@ export default function RootLayout({
               {/* Logo & Slogan */}
               <div className="col-span-2 lg:col-span-1">
                 <Image
-                  src="https://i.ibb.co/jvrWFmKN/Trade-Wyckoff-1.png"
+                  src="https://i.ibb.co/HZQ4rPn/Trade-Wyckoff-2.png"
                   alt="Wyckoff Pro"
                   width={140}
                   height={35}

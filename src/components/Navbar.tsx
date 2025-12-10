@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -13,8 +14,30 @@ import {
 
 export function Navbar() {
   const [isDark, setIsDark] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
+    // Function to check dark sections
+    const checkDarkSections = () => {
+      const navbarHeight = 64;
+      const darkSections = document.querySelectorAll('[data-theme="dark"]');
+      let isInDarkSection = false;
+
+      darkSections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= navbarHeight && rect.bottom > navbarHeight) {
+          isInDarkSection = true;
+        }
+      });
+
+      setIsDark(isInDarkSection);
+    };
+
+    // Small delay to ensure DOM is ready after navigation
+    const timeoutId = setTimeout(() => {
+      checkDarkSections();
+    }, 50);
+
     // Sections with dark backgrounds
     const darkSections = document.querySelectorAll('[data-theme="dark"]');
     
@@ -55,27 +78,18 @@ export function Navbar() {
 
     // Also listen to scroll for more responsive updates
     const handleScroll = () => {
-      const navbarHeight = 64;
-      let isInDarkSection = false;
-
-      darkSections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= navbarHeight && rect.bottom > navbarHeight) {
-          isInDarkSection = true;
-        }
-      });
-
-      setIsDark(isInDarkSection);
+      checkDarkSections();
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Check initial state
+    checkDarkSections(); // Check initial state
 
     return () => {
+      clearTimeout(timeoutId);
       observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [pathname]); // Re-run when pathname changes
 
   return (
     <nav
@@ -89,7 +103,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 mr-8">
           <Image
-            src="https://i.ibb.co/jvrWFmKN/Trade-Wyckoff-1.png"
+            src="https://i.ibb.co/HZQ4rPn/Trade-Wyckoff-2.png"
             alt="Wyckoff Pro"
             width={160}
             height={40}
