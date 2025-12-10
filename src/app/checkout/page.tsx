@@ -1,23 +1,73 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, Suspense } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-// Load Stripe - handle missing key gracefully
+// Load Stripe
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = stripePublishableKey ? loadStripe(stripePublishableKey) : null;
 
-export default function CheckoutPage() {
+// Plan configurations (must match PricingSection and API)
+const PLANS = {
+  "3-months": {
+    name: "3 Months",
+    description: "Wyckoff Structure indicator only",
+    monthlyPrice: 79,
+    totalPrice: 237,
+    period: "3 months",
+    includesVSA: false,
+    hasTrial: true,
+  },
+  "6-months": {
+    name: "6 Months",
+    description: "Full access: Wyckoff + VSA indicators",
+    monthlyPrice: 65,
+    totalPrice: 390,
+    period: "6 months",
+    savings: 18,
+    includesVSA: true,
+    hasTrial: true,
+  },
+  "12-months": {
+    name: "12 Months",
+    description: "Maximum savings for committed traders",
+    monthlyPrice: 49,
+    totalPrice: 588,
+    period: "year",
+    savings: 38,
+    includesVSA: true,
+    hasTrial: true,
+  },
+  "lifetime": {
+    name: "Lifetime",
+    description: "Permanent access with no recurring payments",
+    totalPrice: 997,
+    period: "one-time",
+    includesVSA: true,
+    hasTrial: false,
+    isLifetime: true,
+  },
+};
+
+type PlanId = keyof typeof PLANS;
+
+function CheckoutContent() {
   const { isLoaded, isSignedIn } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
+  
+  // Get plan from URL or default to 6-months
+  const planId = (searchParams.get("plan") || "6-months") as PlanId;
+  const plan = PLANS[planId] || PLANS["6-months"];
+  const hasTrial = searchParams.get("trial") === "true" || plan.hasTrial;
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -29,6 +79,11 @@ export default function CheckoutPage() {
     try {
       const response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          planId,
+          trial: hasTrial && !plan.isLifetime,
+        }),
       });
 
       if (!response.ok) {
@@ -42,28 +97,27 @@ export default function CheckoutPage() {
       setError("Error loading checkout. Please try again.");
       throw err;
     }
-  }, []);
+  }, [planId, hasTrial, plan.isLifetime]);
 
   if (!isLoaded || !isSignedIn) {
     return (
-      <div className="min-h-screen bg-[#F8F9FD] flex items-center justify-center">
+      <div className="min-h-screen bg-[#0B0E11] flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2962FF]"></div>
       </div>
     );
   }
 
-  // Check if Stripe is configured
   if (!stripePromise) {
     return (
-      <div className="min-h-screen bg-[#F8F9FD] flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl shadow-xl text-center max-w-md border border-[#E0E3EB]">
-          <div className="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen bg-[#0B0E11] flex items-center justify-center p-4">
+        <div className="bg-[#1E222D] p-8 rounded-2xl text-center max-w-md border border-gray-800">
+          <div className="w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-[#131722] mb-2">Configuration Error</h2>
-          <p className="text-[#5D6069] mb-6">Payment system is not configured. Please contact support.</p>
+          <h2 className="text-xl font-bold text-white mb-2">Configuration Error</h2>
+          <p className="text-gray-400 mb-6">Payment system is not configured. Please contact support.</p>
           <Link
             href="/"
             className="inline-block bg-[#2962FF] hover:bg-[#1E53E5] text-white font-semibold px-6 py-3 rounded-xl transition-colors"
@@ -77,15 +131,15 @@ export default function CheckoutPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#F8F9FD] flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl shadow-xl text-center max-w-md border border-[#E0E3EB]">
-          <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen bg-[#0B0E11] flex items-center justify-center p-4">
+        <div className="bg-[#1E222D] p-8 rounded-2xl text-center max-w-md border border-gray-800">
+          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-[#131722] mb-2">Error</h2>
-          <p className="text-[#5D6069] mb-6">{error}</p>
+          <h2 className="text-xl font-bold text-white mb-2">Error</h2>
+          <p className="text-gray-400 mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
             className="bg-[#2962FF] hover:bg-[#1E53E5] text-white font-semibold px-6 py-3 rounded-xl transition-colors"
@@ -98,76 +152,128 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F8F9FD] via-white to-[#E8EFFD]">
-      {/* Subtle Background Pattern */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#2962FF]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#089981]/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
-      </div>
-
-      <div className="relative z-10 max-w-5xl mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
-            <svg width="32" height="32" viewBox="0 0 32 32" className="text-[#2962FF]">
+    <div className="min-h-screen bg-[#0B0E11]">
+      {/* Header */}
+      <div className="border-b border-gray-800 bg-[#0B0E11]/95 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 group">
+            <svg width="28" height="28" viewBox="0 0 32 32" className="text-[#2962FF]">
               <rect x="4" y="16" width="4" height="12" rx="2" fill="currentColor" opacity="0.5"/>
               <rect x="10" y="12" width="4" height="16" rx="2" fill="currentColor" opacity="0.7"/>
               <rect x="16" y="8" width="4" height="20" rx="2" fill="currentColor" opacity="0.85"/>
               <rect x="22" y="4" width="4" height="24" rx="2" fill="currentColor"/>
             </svg>
-            <span className="text-[#131722] font-bold text-xl group-hover:text-[#2962FF] transition-colors">Wyckoff Pro</span>
+            <span className="text-white font-bold text-lg group-hover:text-[#2962FF] transition-colors">Wyckoff Pro</span>
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-[#131722] mb-3">
-            Complete Your Subscription
-          </h1>
-          <p className="text-[#5D6069]">Secure payment powered by Stripe</p>
+          
+          {/* Trust indicators in header */}
+          <div className="hidden md:flex items-center gap-4 text-xs text-gray-400">
+            <div className="flex items-center gap-1.5">
+              <svg className="w-4 h-4 text-[#089981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Secure Payment
+            </div>
+            <div className="flex items-center gap-1.5">
+              <svg className="w-4 h-4 text-[#089981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              SSL Encrypted
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div className="grid lg:grid-cols-7 gap-8">
-          {/* Left Side - Plan Details */}
-          <div className="lg:col-span-3 space-y-6">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="grid lg:grid-cols-5 gap-8">
+          {/* Left Side - Plan Summary */}
+          <div className="lg:col-span-2 space-y-6">
             {/* Plan Card */}
-            <div className="bg-white rounded-2xl border border-[#E0E3EB] p-6 shadow-lg shadow-black/5 sticky top-24">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-gradient-to-br from-[#2962FF] to-[#1E53E5] rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-[#1E222D] rounded-2xl border border-gray-800 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#2962FF] to-[#1E53E5] rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#131722] text-lg">Wyckoff Pro</h3>
-                  <p className="text-[#5D6069] text-sm">Monthly Subscription</p>
+                  <h3 className="font-bold text-white text-lg">Wyckoff Pro - {plan.name}</h3>
+                  <p className="text-gray-400 text-sm">{plan.description}</p>
                 </div>
               </div>
 
-              <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-4xl font-bold text-[#131722]">$29.99</span>
-                <span className="text-[#5D6069]">/month</span>
+              {/* Price display */}
+              <div className="mb-6 pb-6 border-b border-gray-700">
+                {plan.isLifetime ? (
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-4xl font-bold text-white">${plan.totalPrice}</span>
+                      <span className="text-gray-400">one-time</span>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">Permanent access, no recurring payments</p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-4xl font-bold text-white">${plan.monthlyPrice}</span>
+                      <span className="text-gray-400">/month</span>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">
+                      ${plan.totalPrice} billed every {plan.period}
+                    </p>
+                    {plan.savings && (
+                      <span className="inline-block mt-2 bg-[#089981]/20 text-[#089981] text-xs font-semibold px-2 py-1 rounded">
+                        Save {plan.savings}%
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
 
-              <div className="space-y-3 mb-6">
-                {[
-                  "Full indicator access",
-                  "Automatic Spring & UTAD detection",
-                  "Dynamic phase visualization (A-E)",
-                  "Narrative tooltips with VSA context",
-                  "Unlimited TradingView alerts",
-                  "Automatic updates",
-                  "Priority Discord support",
-                ].map((feature, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[#089981]/10 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-[#089981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              {/* Trial info - VERY IMPORTANT */}
+              {hasTrial && !plan.isLifetime && (
+                <div className="bg-[#2962FF]/10 border border-[#2962FF]/30 rounded-xl p-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-[#2962FF] rounded-full flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <span className="text-[#5D6069] text-sm">{feature}</span>
+                    <div>
+                      <h4 className="font-bold text-white text-sm">7-Day Free Trial</h4>
+                      <p className="text-gray-400 text-xs mt-1">
+                        You won&apos;t be charged today. Your card will only be charged after the 7-day trial period ends. Cancel anytime before to avoid charges.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Features */}
+              <div className="space-y-3">
+                <p className="text-xs text-gray-500 uppercase tracking-wider">What&apos;s included:</p>
+                {[
+                  "Wyckoff Structure Indicator",
+                  plan.includesVSA && "VSA Tom Williams Indicator",
+                  "Spring & UTAD Detection",
+                  "A-E Phases Visualization",
+                  "Contextual Tooltips",
+                  "TradingView Alerts",
+                  "Automatic Updates",
+                  "Discord Support",
+                ].filter(Boolean).map((feature, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <svg className="w-4 h-4 text-[#089981] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-300 text-sm">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="pt-4 border-t border-[#E0E3EB]">
-                <div className="flex items-center gap-2 text-[#5D6069] text-sm">
+              {/* Cancel policy */}
+              <div className="mt-6 pt-4 border-t border-gray-700">
+                <div className="flex items-center gap-2 text-gray-400 text-sm">
                   <svg className="w-4 h-4 text-[#089981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
@@ -176,52 +282,35 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Trust Badges */}
-            <div className="flex flex-wrap justify-center gap-4 text-xs text-[#787B86]">
-              <div className="flex items-center gap-1.5 bg-white px-3 py-2 rounded-lg border border-[#E0E3EB]">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                Secure Payment
-              </div>
-              <div className="flex items-center gap-1.5 bg-white px-3 py-2 rounded-lg border border-[#E0E3EB]">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                SSL Encrypted
-              </div>
-              <div className="flex items-center gap-1.5 bg-white px-3 py-2 rounded-lg border border-[#E0E3EB]">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.591-7.305z"/>
-                </svg>
-                Powered by Stripe
-              </div>
+            {/* Change plan link */}
+            <div className="text-center">
+              <Link href="/#pricing" className="text-[#2962FF] hover:underline text-sm">
+                ← Change plan
+              </Link>
             </div>
           </div>
 
-          {/* Right Side - Checkout Form */}
-          <div className="lg:col-span-4">
-            <div className="bg-white rounded-xl overflow-hidden border border-[#E0E3EB] shadow-xl shadow-black/5 min-h-[950px]">
-              <div className="stripe-checkout-container [&>div]:min-h-[1080px]">
-                <EmbeddedCheckoutProvider
-                  stripe={stripePromise}
-                  options={{ 
-                    fetchClientSecret,
-                    onComplete: () => {
-                      router.push("/checkout/success");
-                    },
-                  }}
-                >
-                  <EmbeddedCheckout />
-                </EmbeddedCheckoutProvider>
-              </div>
+          {/* Right Side - Stripe Checkout */}
+          <div className="lg:col-span-3">
+            <div className="stripe-checkout-wrapper">
+              <EmbeddedCheckoutProvider
+                stripe={stripePromise}
+                options={{ 
+                  fetchClientSecret,
+                  onComplete: () => {
+                    router.push("/checkout/success");
+                  },
+                }}
+              >
+                <EmbeddedCheckout className="stripe-embedded-checkout" />
+              </EmbeddedCheckoutProvider>
             </div>
           </div>
         </div>
 
         {/* Back Link */}
         <div className="text-center mt-8">
-          <Link href="/" className="text-[#5D6069] hover:text-[#2962FF] text-sm transition-colors inline-flex items-center gap-1">
+          <Link href="/" className="text-gray-500 hover:text-white text-sm transition-colors inline-flex items-center gap-1">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -230,5 +319,24 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function CheckoutLoading() {
+  return (
+    <div className="min-h-screen bg-[#0B0E11] flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2962FF] mx-auto mb-4"></div>
+        <p className="text-gray-400">Loading checkout...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<CheckoutLoading />}>
+      <CheckoutContent />
+    </Suspense>
   );
 }

@@ -146,38 +146,37 @@ body {
   background-color: #1e53e5 !important;
 }
 
-/* Stripe Embedded Checkout Customization */
-.stripe-checkout-container {
-  min-height: 950px;
-  display: flex;
-  flex-direction: column;
-  overflow: visible !important;
+/* Stripe Embedded Checkout Customization - Dark Theme */
+.stripe-checkout-wrapper {
+  background: transparent;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
-.stripe-checkout-container iframe {
-  flex: 1;
-  min-height: 950px !important;
-  max-height: none !important;
+.stripe-checkout-wrapper iframe {
+  min-height: 700px !important;
   border: none !important;
+  background: transparent !important;
 }
 
-/* Ensure the checkout fills the container properly */
-.stripe-checkout-container > div {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+/* Target Stripe's embedded checkout */
+.stripe-embedded-checkout {
+  width: 100%;
 }
 
-/* Link modal improvements - target the Stripe overlay */
-.StripeElement,
-.stripe-checkout-container .ElementsApp {
-  width: 100% !important;
+.stripe-embedded-checkout > div {
+  min-height: 700px;
 }
 
-/* Make sure the checkout container is responsive */
-@media (max-width: 768px) {
-  .stripe-checkout-container {
-    min-height: 600px;
+/* Ensure proper scrolling on mobile */
+@media (max-width: 1024px) {
+  .stripe-checkout-wrapper {
+    margin: 0 -1rem;
+    border-radius: 0;
+  }
+  
+  .stripe-checkout-wrapper iframe {
+    min-height: 600px !important;
   }
 }
 

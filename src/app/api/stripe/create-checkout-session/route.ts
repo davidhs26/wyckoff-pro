@@ -71,7 +71,8 @@ export async function POST(req: Request) {
     const url = new URL(req.url);
     const planIdFromQuery = url.searchParams.get("planId");
     const body = await req.json().catch(() => ({}));
-    const planId = body.planId || planIdFromQuery || "12-months";
+    const planId = body.planId || planIdFromQuery || "6-months";
+    const wantsTrial = body.trial !== false; // Default to true for subscriptions
 
     const plan = PLANS[planId as keyof typeof PLANS];
     if (!plan) {
@@ -164,6 +165,8 @@ export async function POST(req: Request) {
           clerkUserId: userId,
           planId: planId,
         },
+        // Add 7-day free trial for subscriptions
+        ...(wantsTrial && { trial_period_days: 7 }),
       };
     } else {
       sessionParams.payment_intent_data = {
